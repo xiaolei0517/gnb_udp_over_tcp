@@ -68,11 +68,11 @@ static void setup_log_ctx(udp_over_tcp_service_conf_t *conf, gnb_log_ctx_t *log,
     int rc;
 
     log->output_type = GNB_LOG_OUTPUT_STDOUT;
-
+    #ifdef __UNIX_LIKE_OS__
     if ( 0!=conf->daemon ) {
         log->output_type = GNB_LOG_OUTPUT_NONE;
     }
-
+    #endif
     if ( NULL != log_path ) {
 
         snprintf(log->log_file_path, PATH_MAX, "%s", log_path);
@@ -299,12 +299,12 @@ int main (int argc,char *argv[]){
     #endif
 
     log = gnb_log_ctx_create();
-
+    #ifdef __UNIX_LIKE_OS__
     if ( 0 == udp_over_tcp_service_conf->daemon && 1==verbose_opt ) {
         log_console_level = 3;
         log_udp_level     = 3;
     }
-
+    #endif
     setup_log_ctx(udp_over_tcp_service_conf, log, log_path, log_udp_sockaddress4_string, log_console_level, log_file_level, log_udp_level);
 
     if ( 0 != udp_opt ) {
